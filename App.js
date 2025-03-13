@@ -1,26 +1,44 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Image, StyleSheet, Text, Dimensions, Button} from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Button,
+  StatusBar,
+} from 'react-native';
 import Video from 'react-native-video';
+import Orientation from 'react-native-orientation-locker'; // Import the library
+import {
+  showNavigationBar,
+  hideNavigationBar,
+} from 'react-native-navigation-bar-color';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 // Slides with images, videos, and HLS streams
 const slides = [
-  {type: 'image', source: require('./assets/img1.png'), resizeMode: 'cover'},
+  {type: 'image', source: require('./assets/img1.png'), resizeMode: 'contain '},
   {
     type: 'video',
     source: require('./assets/video1.mp4'),
-    resizeMode: 'contain',
+    resizeMode: 'contain ',
   },
-  {type: 'image', source: require('./assets/img2.jpg'), resizeMode: 'fill'},
-  {type: 'video', source: require('./assets/video2.mp4'), resizeMode: 'cover'},
+  {type: 'image', source: require('./assets/img2.jpg'), resizeMode: 'contain '},
+  {
+    type: 'video',
+    source: require('./assets/video2.mp4'),
+    resizeMode: 'contain ',
+  },
+  {type: 'image', source: require('./assets/img3.jpg'), resizeMode: 'contain '},
   {
     type: 'hls',
     source: {
-      uri: 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8',
+      uri: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     },
-    resizeMode: 'cover',
+    resizeMode: 'contain ',
   },
 ];
 
@@ -35,6 +53,32 @@ export default function App() {
   const [isPlaying2, setIsPlaying2] = useState(true); // Control for video 2
   const [isLooping1, setIsLooping1] = useState(false); // Loop control for video 1
   const [isLooping2, setIsLooping2] = useState(false); // Loop control for video 2
+
+  useEffect(() => {
+    // Unlock all orientations to enable auto-rotation
+    Orientation.unlockAllOrientations();
+
+    // Clean up the listener when the component is unmounted
+    return () => {
+      Orientation.unlockAllOrientations(); // Unlock orientations on cleanup
+    };
+  }, []);
+
+  useEffect(() => {
+    hideNavigationBar(true); // Hide the navigation bar
+    return () => {
+      showNavigationBar(true); // Optionally restore it when leaving the screen
+    };
+  }, []);
+
+  useEffect(() => {
+    // Hide both status bar and navigation bar (immersive full-screen mode)
+    StatusBar.setHidden(true, 'fade');
+    return () => {
+      // Optionally, reset back to default when component unmounts
+      StatusBar.setHidden(false);
+    };
+  }, []);
 
   // Function to change to the next slide
   const nextSlide = () => {
@@ -150,25 +194,23 @@ export default function App() {
           />
         )}
         {slides[currentSlide]?.type === 'video' ||
-          (slides[currentSlide]?.type === 'hls' ? (
-            <>
-              <View style={styles.controls}>
-                <Button
-                  title={isPlaying1 ? 'Pause' : 'Play'}
-                  onPress={togglePlayPause1}
-                />
-                <Button title="Reset" onPress={resetVideo1} />
-                <Button title="Seek 5s" onPress={() => playAtPosition1(5)} />
-                <Button
-                  title={isLooping1 ? 'Loop On' : 'Loop Off'}
-                  color={isLooping1 ? 'green' : 'gray'}
-                  onPress={toggleLoop1}
-                />
-              </View>
-            </>
-          ) : (
-            <></>
-          ))}
+        slides[currentSlide]?.type === 'hls' ? (
+          <View style={styles.controls}>
+            <Button
+              title={isPlaying2 ? 'Pause' : 'Play'}
+              onPress={togglePlayPause1}
+            />
+            <Button title="Reset" onPress={resetVideo1} />
+            <Button title="Seek 8s" onPress={() => playAtPosition1(8)} />
+            <Button
+              title={isLooping1 ? 'Loop On' : 'Loop Off'}
+              color={isLooping1 ? 'green' : 'gray'}
+              onPress={toggleLoop1}
+            />
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
 
       {/* Bottom Half */}
@@ -200,7 +242,7 @@ export default function App() {
               onPress={togglePlayPause2}
             />
             <Button title="Reset" onPress={resetVideo2} />
-            <Button title="Seek 5s" onPress={() => playAtPosition2(5)} />
+            <Button title="Seek 8s" onPress={() => playAtPosition2(8)} />
             <Button
               title={isLooping2 ? 'Loop On' : 'Loop Off'}
               color={isLooping2 ? 'green' : 'gray'}

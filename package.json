@@ -12,6 +12,8 @@
   "dependencies": {
     "react": "19.0.0",
     "react-native": "0.78.0",
+    "react-native-navigation-bar-color": "^2.0.2",
+    "react-native-orientation-locker": "^1.7.0",
     "react-native-video": "^6.10.2"
   },
   "devDependencies": {
