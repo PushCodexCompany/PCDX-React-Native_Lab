@@ -5,7 +5,7 @@ import Video from 'react-native-video';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-// Slides with images and videos
+// Slides with images, videos, and HLS streams
 const slides = [
   {type: 'image', source: require('./assets/img1.png'), resizeMode: 'cover'},
   {
@@ -15,6 +15,13 @@ const slides = [
   },
   {type: 'image', source: require('./assets/img2.jpg'), resizeMode: 'fill'},
   {type: 'video', source: require('./assets/video2.mp4'), resizeMode: 'cover'},
+  {
+    type: 'hls',
+    source: {
+      uri: 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8',
+    },
+    resizeMode: 'cover',
+  },
 ];
 
 export default function App() {
@@ -93,12 +100,12 @@ export default function App() {
 
   const resetVideo1 = () => {
     videoRef1.current?.seek(0);
-    setIsPlaying1(false); // Set the video to play immediately
+    setIsPlaying1(true); // Set the video to play immediately
   };
 
   const resetVideo2 = () => {
     videoRef2.current?.seek(0);
-    setIsPlaying2(false); // Set the video to play immediately
+    setIsPlaying2(true); // Set the video to play immediately
   };
 
   const playAtPosition1 = seconds => {
@@ -142,21 +149,26 @@ export default function App() {
             paused={!isPlaying1}
           />
         )}
-        {slides[currentSlide]?.type === 'video' && (
-          <View style={styles.controls}>
-            <Button
-              title={isPlaying1 ? 'Pause' : 'Play'}
-              onPress={togglePlayPause1}
-            />
-            <Button title="Reset" onPress={resetVideo1} />
-            <Button title="Seek 5s" onPress={() => playAtPosition1(5)} />
-            <Button
-              title={isLooping1 ? 'Loop On' : 'Loop Off'}
-              color={isLooping1 ? 'green' : 'gray'}
-              onPress={toggleLoop1}
-            />
-          </View>
-        )}
+        {slides[currentSlide]?.type === 'video' ||
+          (slides[currentSlide]?.type === 'hls' ? (
+            <>
+              <View style={styles.controls}>
+                <Button
+                  title={isPlaying1 ? 'Pause' : 'Play'}
+                  onPress={togglePlayPause1}
+                />
+                <Button title="Reset" onPress={resetVideo1} />
+                <Button title="Seek 5s" onPress={() => playAtPosition1(5)} />
+                <Button
+                  title={isLooping1 ? 'Loop On' : 'Loop Off'}
+                  color={isLooping1 ? 'green' : 'gray'}
+                  onPress={toggleLoop1}
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          ))}
       </View>
 
       {/* Bottom Half */}
@@ -180,7 +192,8 @@ export default function App() {
             paused={!isPlaying2}
           />
         )}
-        {slides[(currentSlide + 1) % slides.length]?.type === 'video' && (
+        {slides[(currentSlide + 1) % slides.length]?.type === 'video' ||
+        slides[(currentSlide + 1) % slides.length]?.type === 'hls' ? (
           <View style={styles.controls}>
             <Button
               title={isPlaying2 ? 'Pause' : 'Play'}
@@ -194,6 +207,8 @@ export default function App() {
               onPress={toggleLoop2}
             />
           </View>
+        ) : (
+          <></>
         )}
       </View>
 
