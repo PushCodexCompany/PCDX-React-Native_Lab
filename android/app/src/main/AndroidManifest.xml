@@ -2,7 +2,16 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Android 10 (API level 29), the WRITE_EXTERNAL_STORAGE and READ_EXTERNAL_STORAGE permissions have been deprecated -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- For Android 10 (API 29) and above, you should use the MANAGE_EXTERNAL_STORAGE permission for broader access: -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+
     <application
+      android:requestLegacyExternalStorage="true" 
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
