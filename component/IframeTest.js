@@ -30,10 +30,7 @@ const IframeTest = () => {
     </html>
   `;
 
-  const fileUrls = [
-    'http://dgs.push-signage.com/content/auUpa8dN4g/media/1741794534_63237.png',
-    'http://dgs.push-signage.com/content/auUpa8dN4g/media/1725506551_20714.mp4',
-  ];
+  const fileUrls = ['https://pushcodex.com/images/gallery_02.png'];
 
   const requestStoragePermission = async () => {
     if (Platform.OS === 'android' && Platform.Version < 29) {
