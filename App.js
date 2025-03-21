@@ -18,6 +18,8 @@ import Immersive from 'react-native-immersive';
 import VideoTest from './component/VideoTest';
 import IframeTest from './component/IframeTest';
 import SocketTest from './component/SocketTest';
+import WatchDogAndKeepAlive from './component/WatchDogAndKeepAlive';
+import ErrorBoundary from './component/ErrorBoundary'; // Make sure this is the correct path
 
 // Create Tab Navigator
 const Tab = createBottomTabNavigator();
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     left: 0, // Position at the left
     width: 100,
     height: 100,
-    backgroundColor: 'red', // Red clickable area
+    // backgroundColor: 'red', // Red clickable area
     opacity: 0.5, // Semi-transparent for better visibility
   },
   buttonContainer: {
@@ -174,6 +176,16 @@ function SocketScreen() {
   );
 }
 
+function WatchDogAndKeepAliveScreen() {
+  return (
+    // <ErrorBoundary>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <WatchDogAndKeepAlive />
+    </View>
+    // </ErrorBoundary>
+  );
+}
+
 // Iframe Screen Component
 function IframScreen() {
   return (
@@ -253,7 +265,11 @@ export default function App() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Brightness" component={BrightnessScreen} />
         <Tab.Screen name="Video" component={VideoScreen} />
-        <Tab.Screen name="Scoket" component={SocketScreen} />
+        <Tab.Screen name="Socket" component={SocketScreen} />
+        <Tab.Screen
+          name="WatchDog&KeepAlive"
+          component={WatchDogAndKeepAliveScreen}
+        />
         <Tab.Screen name="Iframe" component={IframScreen} />
       </Tab.Navigator>
     </NavigationContainer>

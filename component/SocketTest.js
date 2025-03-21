@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Button} from 'react-native';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
 // const SOCKET_SERVER_URL = 'ws://dgs.push-signage.com';
 const SOCKET_SERVER_URL = 'ws://10.0.2.2:8080';
