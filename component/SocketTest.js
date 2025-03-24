@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Button} from 'react-native';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 
 // const SOCKET_SERVER_URL = 'ws://dgs.push-signage.com';
-const SOCKET_SERVER_URL = 'ws://10.0.2.2:8080';
+const SOCKET_SERVER_URL = 'https://pushcodex.com/';
+// const SOCKET_SERVER_URL = 'ws://10.0.2.2:8080';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,58 +27,76 @@ const styles = StyleSheet.create({
 const SocketTest = () => {
   const [message, setMessage] = useState('Connecting...');
   const [error, setError] = useState(null);
-  const socket = React.useRef(null); // Store the WebSocket instance
+  // const socket = React.useRef(null); // Store the WebSocket instance
 
   useEffect(() => {
-    // Create a WebSocket connection
-    socket.current = new WebSocket(SOCKET_SERVER_URL);
+    const socket = io(SOCKET_SERVER_URL);
+    console.log('socket', socket);
+    socket.on('connect', () => {
+      setMessage('Connected to Socket Server');
+      console.log('Connected to socket server');
+    });
 
-    // Event listener for WebSocket connection established
-    socket.current.onopen = () => {
-      setMessage('Connected to WebSocket server');
-      console.log('WebSocket connected');
-    };
+    socket.on('disconnect', () => {
+      setMessage('Disconnected from Socket Server');
+      console.log('Disconnected from socket server');
+    });
 
-    // Event listener for incoming messages
-    socket.current.onmessage = e => {
-      const data = e.data;
-      setMessage(`Message from server: ${data}`);
+    socket.on('message', data => {
+      setMessage(`Message: ${data}`);
       console.log('Message from server:', data);
-    };
+    });
 
-    // Event listener for WebSocket errors
-    socket.current.onerror = e => {
-      setError('WebSocket Error: ' + e.message);
-      console.error('WebSocket Error:', e.message);
-    };
-
-    // Event listener for WebSocket closure
-    socket.current.onclose = e => {
-      setMessage('Disconnected from WebSocket server');
-      console.log('WebSocket closed:', e);
-    };
-
-    // Cleanup WebSocket connection on component unmount
+    // Clean up the connection on unmount
     return () => {
-      if (socket.current) {
-        socket.current.close();
-      }
+      socket.disconnect();
     };
   }, []);
 
-  const sendMessage = () => {
-    if (socket.current && socket.current.readyState === WebSocket.OPEN) {
-      socket.current.send('Hello from React Native!');
-    } else {
-      console.log('WebSocket is not open');
-    }
-  };
+  // useEffect(() => {
+  //   socket.current = new WebSocket(SOCKET_SERVER_URL);
+
+  //   socket.current.onopen = () => {
+  //     setMessage('Connected to WebSocket server');
+  //     console.log('WebSocket connected');
+  //   };
+
+  //   socket.current.onmessage = e => {
+  //     const data = e.data;
+  //     setMessage(`Message from server: ${data}`);
+  //     console.log('Message from server:', data);
+  //   };
+
+  //   socket.current.onerror = e => {
+  //     setError('WebSocket Error: ' + e.message);
+  //     console.error('WebSocket Error:', e.message);
+  //   };
+
+  //   socket.current.onclose = e => {
+  //     setMessage('Disconnected from WebSocket server');
+  //     console.log('WebSocket closed:', e);
+  //   };
+
+  //   return () => {
+  //     if (socket.current) {
+  //       socket.current.close();
+  //     }
+  //   };
+  // }, []);
+
+  // const sendMessage = () => {
+  //   if (socket.current && socket.current.readyState === WebSocket.OPEN) {
+  //     socket.current.send('Hello from React Native!');
+  //   } else {
+  //     console.log('WebSocket is not open');
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{message}</Text>
-      {error && <Text style={styles.errorText}>{error}</Text>}
-      <Button title="Send Message" onPress={sendMessage} />
+      {/* {error && <Text style={styles.errorText}>{error}</Text>}
+      <Button title="Send Message" onPress={sendMessage} /> */}
     </View>
   );
 };
