@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button, Alert, PermissionsAndroid} from 'react-native';
 import RNFS from 'react-native-fs';
-
+import KeepAwake from 'react-native-keep-awake'; // Import KeepAwake
+import Restart from 'react-native-restart'; // Import Restart from the package
 const LOG_FILE_PATH = RNFS.DownloadDirectoryPath + '/error_log.txt';
 
 const logErrorToFile = async message => {
@@ -23,7 +24,10 @@ const WatchdogKeepalive = () => {
       keepalive();
     }, 2000); // Runs every 2 seconds
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      KeepAwake.deactivate();
+    };
   }, []);
 
   const appStartTime = new Date();
@@ -49,6 +53,7 @@ const WatchdogKeepalive = () => {
   const keepalive = () => {
     try {
       // Simulate keepalive logic (e.g., send heartbeat)
+      KeepAwake.activate();
       console.log('Keepalive ping sent');
     } catch (error) {
       logErrorToFile(`Keepalive error: ${error.message}`);
@@ -57,10 +62,14 @@ const WatchdogKeepalive = () => {
 
   const simulateError = () => {
     try {
-      throw new Error('Simulated Error for testing');
+      // Force an uncaught exception that crashes the app
+      setTimeout(() => {
+        throw new Error('Simulated Fatal Error for Testing'); // This will cause a crash
+      }, 0); // Set the error to happen immediately
     } catch (error) {
       logErrorToFile(`Simulated error: ${error.message}`);
       Alert.alert('Error', 'A simulated error has occurred');
+      Restart.restart(); // Restart the app after the crash
     }
   };
 

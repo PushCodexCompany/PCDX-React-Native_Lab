@@ -21,6 +21,8 @@ import SocketTest from './component/SocketTest';
 import WatchDogAndKeepAlive from './component/WatchDogAndKeepAlive';
 import ErrorBoundary from './component/ErrorBoundary'; // Make sure this is the correct path
 
+import CaptureTest from './component/CaptureTest';
+
 // Create Tab Navigator
 const Tab = createBottomTabNavigator();
 
@@ -107,6 +109,14 @@ function HomeScreen() {
         </View>
       </TouchableWithoutFeedback>
       <Text>Home Screen</Text>
+    </View>
+  );
+}
+
+function CaptureScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <CaptureTest />
     </View>
   );
 }
@@ -263,6 +273,7 @@ export default function App() {
           headerShown: false,
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Capture Screen" component={CaptureScreen} />
         <Tab.Screen name="Brightness" component={BrightnessScreen} />
         <Tab.Screen name="Video" component={VideoScreen} />
         <Tab.Screen name="Socket" component={SocketScreen} />
