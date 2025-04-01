@@ -31,20 +31,16 @@ const SocketTest = () => {
 
   useEffect(() => {
     const socket = io(SOCKET_SERVER_URL);
-    console.log('socket', socket);
     socket.on('connect', () => {
       setMessage('Connected to Socket Server');
-      console.log('Connected to socket server');
     });
 
     socket.on('disconnect', () => {
       setMessage('Disconnected from Socket Server');
-      console.log('Disconnected from socket server');
     });
 
     socket.on('message', data => {
       setMessage(`Message: ${data}`);
-      console.log('Message from server:', data);
     });
 
     // Clean up the connection on unmount

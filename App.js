@@ -21,8 +21,9 @@ import SocketTest from './component/SocketTest';
 import WatchDogAndKeepAlive from './component/WatchDogAndKeepAlive';
 import ApiTest from './component/ApiTest';
 import ErrorBoundary from './component/ErrorBoundary'; // Make sure this is the correct path
-
+import ControlTest from './component/ControlTest';
 import CaptureTest from './component/CaptureTest';
+import StaticTest from './component/StaticTest';
 
 // Create Tab Navigator
 const Tab = createBottomTabNavigator();
@@ -186,6 +187,22 @@ function VideoScreen() {
   );
 }
 
+function ControlScreen() {
+  return (
+    <View style={{flex: 1}}>
+      <ControlTest />
+    </View>
+  );
+}
+
+function StaticScreen() {
+  return (
+    <View style={{flex: 1}}>
+      <StaticTest />
+    </View>
+  );
+}
+
 // Iframe Screen Component
 function SocketScreen() {
   return (
@@ -286,6 +303,8 @@ export default function App() {
         <Tab.Screen name="Capture Screen" component={CaptureScreen} />
         <Tab.Screen name="Brightness" component={BrightnessScreen} />
         <Tab.Screen name="Video" component={VideoScreen} />
+        <Tab.Screen name="Control" component={ControlScreen} />
+        <Tab.Screen name="Static" component={StaticScreen} />
         <Tab.Screen name="Socket" component={SocketScreen} />
         <Tab.Screen
           name="WatchDog&KeepAlive"
